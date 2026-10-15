@@ -1,7 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>be49bc34-ee8a-44b8-a0ab-08c70d2a4cd6</UserSecretsId>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="OpenAI" Version="2.14.0" />
+  </ItemGroup>
 </Project>

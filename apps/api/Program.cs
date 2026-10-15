@@ -7,12 +7,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped<INoteExtractionService, NoteExtractionService>();
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+    options.AddPolicy("Netlify", policy =>
+        policy.WithOrigins("https://ibernia-assessment-web.netlify.app")
+              .AllowAnyHeader()
+              .AllowAnyMethod());
 });
 
 var app = builder.Build();
 
-app.UseCors();
+app.UseCors("Netlify");
 app.MapControllers();
 app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 
