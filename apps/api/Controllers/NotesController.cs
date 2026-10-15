@@ -17,15 +17,24 @@ public sealed class NotesController(INoteExtractionService extractionService) : 
         [FromBody] ExtractNoteRequest request,
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(request.Notes))
+        try
         {
-            return BadRequest(new { error = "Notes are required." });
+            if (string.IsNullOrWhiteSpace(request.Notes))
+            {
+                return BadRequest(new { error = "Notes are required." });
+            }
+            if (request.Notes.Length > MaxNotesLength)
+            {
+                return BadRequest(new { error = MaxNotesLengthErrorMessage });
+            }
+            var result = await extractionService.ExtractAsync(request.Notes, cancellationToken);
+            return Ok(result);
         }
-        if (request.Notes.Length > MaxNotesLength)
+        catch (Exception ex)
         {
-            return BadRequest(new { error = MaxNotesLengthErrorMessage });
+            // Catch the error and return a clean message
+            // You can log 'ex.Message' here if you have a logger
+            return StatusCode(500, new { error = "Failed to extract notes. The Service is not working right now, please try again later." });
         }
-        var result = await extractionService.ExtractAsync(request.Notes, cancellationToken);
-        return Ok(result);
     }
 }
